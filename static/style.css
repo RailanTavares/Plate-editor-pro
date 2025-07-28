@@ -1358,3 +1358,62 @@ input[type="file"]::-webkit-file-upload-button:hover {
     font-size: 1.5em;
     padding: 5px;
 }
+
+/* --- INÍCIO: NOVOS ESTILOS PARA A PRÉ-VISUALIZAÇÃO (CORRIGIDO) --- */
+.preview-overlay {
+    display: none; /* Começa escondido */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(5px);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.preview-overlay.show {
+    display: flex; /* Mostra o overlay */
+}
+
+#previewContent {
+    transform-origin: center center;
+}
+
+/* Ajusta a placa clonada para a visualização */
+#previewContent .placa-a4 {
+    box-shadow: var(--shadow-strong);
+    border-radius: 15px; /* Mantém o raio da borda */
+}
+
+.preview-close-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: transparent;
+    border: none;
+    font-size: 2.5rem;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    transition: transform 0.3s ease, color 0.3s ease;
+    line-height: 1;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    border-radius: 50%;
+    z-index: 2001; /* Garante que ele fique acima do conteúdo */
+}
+
+.preview-close-button:hover {
+    color: var(--cor-branco);
+    transform: rotate(90deg) scale(1.1);
+}
+/* --- FIM: NOVOS ESTILOS PARA A PRÉ-VISUALIZAÇÃO --- */

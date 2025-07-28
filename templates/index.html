@@ -31,6 +31,7 @@
         <label for="importProjectInput" id="importProjectButton" class="top-menu-button" title="Importar projeto de um arquivo .json"><i class="fas fa-file-upload"></i> Importar Projeto</label>
         <input type="file" id="importProjectInput" accept=".json" style="display: none;">
         <button id="topMenuSalvar" class="top-menu-button"><i class="fas fa-save"></i> Salvar</button>
+        <button id="previewButton" class="top-menu-button"><i class="fas fa-eye"></i> Pré-visualizar</button>
         <button id="topMenuCompartilhar" class="top-menu-button"><i class="fas fa-share-alt"></i> Compartilhar</button>
     </div>
     <div class="top-menu-group">
@@ -484,6 +485,12 @@
             </div>
         </div>
     </div>
+
+    <div id="previewOverlay" class="preview-overlay">
+        <button id="closePreview" class="preview-close-button">&times;</button>
+        <div id="previewContent"></div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="{{ url_for('static', filename='script.js') }}" defer></script>

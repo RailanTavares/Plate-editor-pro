@@ -288,6 +288,12 @@ const removeSymbolButton = document.getElementById('removeSymbolButton');
 const layersPanel = document.getElementById('layersPanel');
 const layerList = document.getElementById('layerList');
 
+// --- NOVO: CONSTANTES PARA A PRÉ-VISUALIZAÇÃO ---
+const previewButton = document.getElementById('previewButton');
+const previewOverlay = document.getElementById('previewOverlay');
+const previewContent = document.getElementById('previewContent');
+const closePreview = document.getElementById('closePreview');
+
 
 // --- LÓGICA DE CALLBACK PARA MODAL DE CONFIRMAÇÃO ---
 let confirmCallback = null;
@@ -891,6 +897,44 @@ function showConfigModal() {
 
 function hideConfigModal() {
     configModal.classList.remove('show');
+}
+
+// --- NOVO: Funções para a Pré-visualização ---
+function showPreview() {
+    // Deseleciona qualquer camada para remover as bordas
+    deselectAllLayers();
+    
+    // Limpa o conteúdo anterior
+    previewContent.innerHTML = '';
+
+    // Clona a placa
+    const placaClone = placaA4.cloneNode(true);
+
+    // Remove classes e elementos indesejados no clone
+    placaClone.querySelectorAll('.interactive-placa-element').forEach(el => {
+        el.classList.remove('interactive-placa-element', 'selected-layer');
+    });
+    placaClone.querySelectorAll('.resize-handle, .remove-image-btn').forEach(el => el.remove());
+
+    // Anexa o clone ao contêiner de pré-visualização
+    previewContent.appendChild(placaClone);
+    
+    // Ajusta o tamanho do clone para caber na tela
+    // Adiciona um pequeno atraso para garantir que o DOM foi atualizado
+    setTimeout(() => {
+        const viewportW = window.innerWidth * 0.9;
+        const viewportH = window.innerHeight * 0.9;
+        const scale = Math.min(viewportW / placaClone.offsetWidth, viewportH / placaClone.offsetHeight);
+        placaClone.style.transform = `scale(${scale})`;
+    }, 10);
+
+    // Mostra o overlay
+    previewOverlay.classList.add('show');
+}
+
+function hidePreview() {
+    previewOverlay.classList.remove('show');
+    previewContent.innerHTML = ''; // Limpa para liberar memória
 }
 
 
@@ -1948,6 +1992,11 @@ document.addEventListener('DOMContentLoaded', () => {
         exportPlaca('pdf');
         hideSaveModal();
     });
+    
+    // NOVO: Listeners para a pré-visualização
+    previewButton.addEventListener('click', showPreview);
+    closePreview.addEventListener('click', hidePreview);
+
 
     confirmYesButton.addEventListener('click', () => {
         hideConfirmationModal();
