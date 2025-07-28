@@ -17,6 +17,9 @@ REM Nome esperado do arquivo .zip na sua release do GitHub.
 REM MUITO IMPORTANTE: Mantenha este nome consistente ao criar suas releases!
 SET "RELEASE_ASSET_EXPECTED_NAME=plate-editor-pro-release.zip"
 
+REM Nome da pasta do ambiente virtual
+SET "VENV_DIR=venv"
+
 REM ========================================================
 REM             INICIANDO PROCESSO DE ATUALIZACAO
 REM ========================================================
@@ -32,16 +35,16 @@ ECHO.
 REM Tenta obter os detalhes da ultima release usando curl e Powershell para parsear o JSON
 SET "DOWNLOAD_URL="
 FOR /F "usebackq tokens=*" %%L IN (`
-    curl -s "https://api.github.com/repos/%GITHUB_USER%/%GITHUB_REPO%/releases/latest" ^| ^
-    powershell -Command "$json = ConvertFrom-Json -InputObject (Get-Content -Path 'pipe:0' | Out-String); $json.assets | Where-Object { $_.name -eq '%RELEASE_ASSET_EXPECTED_NAME%' } | Select-Object -ExpandProperty browser_download_url"
+    curl -s "https://api.github.com/repos/%GITHUB_USER%/%GITHUB_REPO%/releases/latest" ^
+    ^| powershell -Command "$json = ConvertFrom-Json -InputObject $input; $json.assets | Where-Object { $_.name -eq '%RELEASE_ASSET_EXPECTED_NAME%' } | Select-Object -ExpandProperty browser_download_url"
 `) DO (
     SET "DOWNLOAD_URL=%%L"
 )
 
 IF "%DOWNLOAD_URL%"=="" (
-    ECHO ERRO: Nao foi possivel encontrar a URL de download para '%RELEASE_ASSET_EXPECTED_NAME%'.
-    ECHO Certifique-se de que o nome do asset na release esta correto e o repositorio e publico.
-    ECHO Para repositorios privados, pode ser necessaria autenticacao (token).
+    ECHO ERRO: Nao foi possivel encontrar a URL de download para %RELEASE_ASSET_EXPECTED_NAME%.
+    ECHO Certifique-se de que a release mais recente no GitHub contem este arquivo.
+    ECHO Pode ser necessaria autenticacao (token) se o repositorio for privado.
     PAUSE
     GOTO :EOF
 )
@@ -72,25 +75,68 @@ ECHO Limpando arquivos temporarios...
 IF EXIST new_version.zip DEL new_version.zip
 
 ECHO.
-ECHO Instalando/atualizando dependencias Python (requirements.txt)...
+ECHO Instalando/atualizando dependencias Python (requirements.txt) no ambiente virtual...
 pushd "%APP_DIR%"
-pip install -r requirements.txt
-popd
 
-IF %ERRORLEVEL% NEQ 0 (
-    ECHO AVISO: Erro ao instalar dependencias Python. Isso pode causar problemas no app.
+REM Verifica se o ambiente virtual existe, se nao, cria
+IF NOT EXIST "%VENV_DIR%\Scripts\activate" (
+    ECHO Ambiente virtual nao encontrado. Criando um novo...
+    python -m venv "%VENV_DIR%"
+    IF %ERRORLEVEL% NEQ 0 (
+        ECHO ERRO: Falha ao criar o ambiente virtual. Verifique a instalacao do Python.
+        PAUSE
+        popd
+        GOTO :EOF
+    )
+    ECHO Ambiente virtual criado.
 )
 
-ECHO.
-ECHO Reiniciando o servidor Flask para aplicar as mudancas...
-REM Chama o seu script existente para parar o servidor antigo e iniciar o novo
-CALL "%APP_DIR%\iniciar servidor.bat"
+REM Ativa o ambiente virtual e instala as dependencias
+call "%VENV_DIR%\Scripts\activate"
+IF %ERRORLEVEL% NEQ 0 (
+    ECHO ERRO: Falha ao ativar o ambiente virtual.
+    PAUSE
+    popd
+    GOTO :EOF
+)
+
+pip install -r requirements.txt
+IF %ERRORLEVEL% NEQ 0 (
+    ECHO AVISO: Erro ao instalar dependencias Python. Isso pode causar problemas no app.
+    ECHO Por favor, verifique o arquivo requirements.txt e as mensagens de erro acima.
+    PAUSE
+)
+
+popd
 
 ECHO.
 ECHO ===============================================
-ECHO   ATUALIZACAO CONCLUIDA COM SUCESSO!
+ECHO   PARANDO INSTANCIAS ANTERIORES DO SERVIDOR...
 ECHO ===============================================
-ECHO.
+REM Tenta encontrar e finalizar processos Python (python.exe e pythonw.exe)
+REM que estao rodando com o titulo especifico (do nosso servidor).
+REM O "nul 2>&1" esconde mensagens de sucesso/erro para uma saida mais limpa.
+REM NOTA: O script 'iniciar servidor.bat' usa 'pythonw.exe'.
+taskkill /F /IM python.exe /FI "WINDOWTITLE eq GeradorDePlacas_Server_BACKGROUND" > nul 2>&1
+taskkill /F /IM pythonw.exe /FI "WINDOWTITLE eq GeradorDePlacas_Server_BACKGROUND" > nul 2>&1
+REM Adicione uma pequena pausa para dar tempo ao sistema de finalizar os processos
+timeout /t 2 /nobreak > nul
 
+ECHO.
+ECHO ===============================================
+ECHO   INICIANDO O SERVIDOR COM A NOVA VERSAO...
+ECHO ===============================================
+REM Inicia o servidor Flask usando o script dedicado.
+REM O script 'iniciar servidor.bat' ja contem a logica para usar pythonw.exe e manter em segundo plano.
+REM Certifique-se de que 'iniciar servidor.bat' esteja na pasta do seu projeto (%APP_DIR%).
+start "" "%APP_DIR%\iniciar servidor.bat"
+
+ECHO.
+ECHO ===============================================
+ECHO   ATUALIZACAO CONCLUIDA!
+ECHO ===============================================
+ECHO O aplicativo deve estar rodando a nova versao.
+ECHO Verifique o endereco: http://127.0.0.1:5000
+ECHO.
 PAUSE
 ENDLOCAL
