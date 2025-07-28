@@ -1,0 +1,1360 @@
+﻿/* Definições de Cores Centralizadas */
+:root {
+    --cor-primaria: #E31837;
+    --cor-secundaria: #FFD700;
+    --cor-verde-clara: #2E8B57;
+    --cor-azul-clara: #0066CC;
+    --cor-cinza: #777;
+    --cor-cinza-suave: #e0e0e0;
+    --cor-preto: #000;
+    --cor-branco: #FFFFFF;
+    --shadow-base: 0 0 10px rgba(0,0,0,0.1);
+    --shadow-medium: 0 4px 15px rgba(0,0,0,0.3);
+    --shadow-strong: 0 8px 20px rgba(0,0,0,0.4);
+    --transition-ease: all 0.3s ease-in-out;
+    --transition-bounce: all 0.4s cubic-bezier(.17,.67,.83,.67);
+}
+
+/* Estilos para a tela de login (agora tela de boas-vindas) */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #E8F0FE; /* Cor de fundo alterada aqui */
+    padding: 20px;
+}
+
+.login-box {
+    background: var(--cor-branco);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: var(--shadow-strong);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.login-box h2 {
+    color: var(--cor-primaria);
+    margin-bottom: 15px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.login-box p {
+    color: #555;
+    margin-bottom: 25px;
+    font-size: 1.1em;
+}
+
+/* Novos estilos para os botões na tela de boas-vindas */
+.login-box button {
+    background-color: var(--cor-primaria);
+    color: var(--cor-branco);
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+    font-size: 1.1em;
+    transition: var(--transition-ease);
+    margin-top: 15px; /* Adicionado margem para separar os botões */
+}
+
+.login-box button:hover {
+    background-color: #C1122F;
+    transform: translateY(-3px); /* Efeito de elevação ao passar o mouse */
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+}
+
+.login-box button:active {
+    transform: translateY(0); /* Retorna à posição original ao clicar */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Estilo específico para o novo botão de configuração */
+.login-box button.config-button {
+    background-color: var(--cor-azul-clara); /* Uma cor diferente para distinção */
+    margin-top: 10px; /* Margem menor entre os botões */
+}
+
+.login-box button.config-button:hover {
+    background-color: #0056b3;
+}
+
+/* Estilo para o texto do rodapé na tela de boas-vindas */
+.login-box .footer-text {
+    font-size: 0.8em;
+    color: #888;
+    margin-top: 20px;
+}
+
+.error-message {
+    color: var(--cor-primaria);
+    margin-top: 15px;
+    font-weight: bold;
+    display: none;
+}
+
+.contact-message {
+    margin-top: 20px;
+    color: #555;
+    font-size: 0.9em;
+    line-height: 1.5;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #E8F0FE; /* Cor de fundo alterada aqui também para consistência */
+    font-family: 'Open Sans', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.editor-container {
+    display: flex;
+    flex-direction: column; /* ALTERADO: Para empilhar a barra de menu e o corpo */
+    width: 100%;
+    max-width: 1600px; /* Aumentado para acomodar o novo painel */
+    gap: 15px; /* Espaço entre a barra de menu e o corpo */
+    padding: 25px;
+    box-sizing: border-box;
+    align-items: stretch; /* ALTERADO: Para esticar os filhos */
+}
+
+/* --- INÍCIO: NOVOS ESTILOS DA BARRA DE MENU SUPERIOR --- */
+#topMenuBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: var(--cor-branco);
+    border-radius: 12px;
+    box-shadow: var(--shadow-base);
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.top-menu-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+#topMenuBar button, #importProjectButton {
+    background-color: var(--cor-cinza-suave);
+    color: #333;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.9em;
+    transition: var(--transition-ease);
+    box-shadow: none;
+    margin: 0;
+    width: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#topMenuBar button:hover, #importProjectButton:hover {
+    background-color: #d1d1d1;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+}
+
+#topMenuBar button:active, #importProjectButton:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-base);
+}
+
+/* Estilo do botão do painel ativo */
+#topMenuBar button.panel-toggle-button.active {
+    background-color: var(--cor-primaria);
+    color: var(--cor-branco);
+    box-shadow: 0 4px 10px rgba(227, 24, 55, 0.4);
+}
+
+#topMenuBar #logoutButton {
+    background-color: var(--cor-azul-clara);
+    color: var(--cor-branco);
+}
+
+#topMenuBar #logoutButton:hover {
+    background-color: #0056b3;
+}
+/* --- FIM: NOVOS ESTILOS DA BARRA DE MENU SUPERIOR --- */
+
+/* NOVO: Wrapper para o corpo do editor com 3 colunas */
+.editor-body {
+    display: grid;
+    grid-template-columns: 350px 1fr 300px;
+    width: 100%;
+    gap: 20px;
+    align-items: flex-start;
+    flex-grow: 1;
+}
+
+.controls {
+    width: 350px;
+    background: var(--cor-branco);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: var(--shadow-base);
+    overflow-y: auto;
+    max-height: calc(100vh - 150px); /* Ajustado para a altura da barra de menu */
+    flex-shrink: 0;
+}
+
+/* --- INÍCIO: ESTILOS DOS NOVOS PAINÉIS DE CONTROLE --- */
+.control-panel, .control-panel-static {
+    border-bottom: 1px solid var(--cor-cinza-suave);
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+.control-panel:last-child, .control-panel-static:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.panel-title {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.panel-title .icon-left {
+    margin-right: 10px;
+    color: var(--cor-cinza);
+}
+
+/* NOVO: Estilo para subtítulo dentro de um painel */
+.panel-subtitle {
+    font-size: 1em;
+    font-weight: bold;
+    color: var(--cor-azul-clara);
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+/* --- FIM: ESTILOS DOS NOVOS PAINÉIS DE CONTROLE --- */
+
+/* NOVOS ESTILOS PARA LISTA DE PLACAS COM EFEITO ZEBRADO */
+.lista-placas-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.lista-placas-select {
+    flex-grow: 1;
+    border: 1px solid #c0c0c0;
+    border-radius: 6px;
+    padding: 5px;
+    font-size: 0.9em;
+    min-height: 150px;
+}
+
+/* Efeito Zebrado para a lista de placas */
+.lista-placas-select option:nth-child(odd) {
+    background-color: #f8f9fa;
+}
+
+.lista-placas-select option:nth-child(even) {
+    background-color: var(--cor-branco);
+}
+
+/* Estilo para a opção selecionada */
+.lista-placas-select option:checked {
+    background-color: var(--cor-azul-clara);
+    color: var(--cor-branco);
+}
+
+.lista-placas-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.lista-btn {
+    padding: 8px 12px !important;
+    margin: 0 !important;
+    font-size: 0.85em !important;
+    width: 38px !important; /* Largura fixa para botões de ícone */
+    height: 38px;
+    background-color: #555 !important;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lista-btn:hover {
+    background-color: #444 !important;
+}
+
+.export-lote-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.lote-btn {
+    flex: 1;
+    padding: 10px 15px !important;
+    margin: 0 !important;
+    font-size: 0.9em !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lote-btn i {
+    margin-right: 8px;
+}
+
+/* --- INÍCIO: ESTILOS PARA O NOVO PAINEL DE CAMADAS --- */
+.layers-panel {
+    width: 300px;
+    background: var(--cor-branco);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: var(--shadow-base);
+    overflow-y: auto;
+    max-height: calc(100vh - 150px);
+    flex-shrink: 0;
+}
+
+.layer-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.layer-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #e9e9e9;
+    cursor: grab;
+    transition: background-color 0.2s ease;
+    user-select: none;
+}
+
+.layer-item:last-child {
+    border-bottom: none;
+}
+
+.layer-item:hover {
+    background-color: #f0f0f0;
+}
+
+.layer-item.selected {
+    background-color: #e0e8f9;
+    border-left: 3px solid var(--cor-azul-clara);
+}
+
+.layer-name {
+    flex-grow: 1;
+    font-size: 0.9em;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-left: 8px;
+}
+
+.layer-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.layer-action-btn {
+    background: none;
+    border: none;
+    color: var(--cor-cinza);
+    cursor: pointer;
+    font-size: 1em;
+    padding: 5px;
+    margin: 0;
+    width: 25px;
+    height: 25px;
+    line-height: 1;
+    transition: color 0.2s ease;
+}
+
+.layer-action-btn:hover {
+    color: var(--cor-preto);
+}
+
+.layer-action-btn.active {
+    color: var(--cor-azul-clara);
+}
+
+/* NOVO: Estilo para o botão de deletar camada */
+.layer-delete-btn:hover {
+    color: var(--cor-primaria);
+}
+
+
+/* Estilo para quando um item está sendo arrastado */
+.layer-item.dragging-layer {
+    opacity: 0.5;
+    background: #d1d1d1;
+}
+
+/* --- FIM: ESTILOS PARA O NOVO PAINEL DE CAMADAS --- */
+
+
+@media (max-width: 1200px) {
+    .editor-body {
+        grid-template-columns: 350px 1fr; /* Esconde o painel de camadas */
+        gap: 20px;
+    }
+    .layers-panel {
+        display: none;
+    }
+}
+
+@media (max-width: 1024px) {
+    .editor-container { flex-direction: column; align-items: center; gap: 20px; padding: 20px; }
+    .editor-body {
+        grid-template-columns: 1fr; /* Empilha tudo */
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        width: 100%;
+    }
+    .controls { order: 2; width: 95%; max-width: 450px; max-height: none; }
+    .placa-a4 { order: 1; width: 95%; height: auto; max-width: 210mm; box-shadow: var(--shadow-medium); }
+    .faixa-promocao { font-size: 38px; padding: 15px 20px; }
+    .produto { font-size: 70px; }
+    .preco-antigo { font-size: 35px; }
+    .preco { font-size: 150px; }
+    .unidade { font-size: 40px; }
+    .oferta-combo { font-size: 38px; padding: 10px 25px; }
+    .validade { font-size: 30px; }
+    .rodape { font-size: 24px; padding: 12px 15px; }
+    .logo-fonseca { font-size: 36px; }
+    .logo-supermercado { font-size: 22px; }
+
+    /* AJUSTES PARA MOBILE NA LISTA DE PLACAS */
+    .lista-placas-container {
+        flex-direction: column;
+    }
+
+    .lista-placas-buttons {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .lista-btn {
+        flex: 1;
+    }
+
+    .export-lote-buttons {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 768px) {
+    .editor-container { padding: 15px; gap: 15px; }
+    .controls { padding: 20px; border-radius: 8px; }
+    .form-group { margin-bottom: 15px; }
+    label { font-size: 0.9em; margin-bottom: 6px; }
+    input, select, button { padding: 8px 10px; font-size: 0.95em; }
+    .color-option { width: 40px; height: 40px; }
+    .faixa-promocao { font-size: 32px; padding: 12px 15px; letter-spacing: 2px; }
+    .produto { font-size: 55px; letter-spacing: 2px; }
+    .preco-antigo { font-size: 30px; }
+    .preco { font-size: 120px; }
+    .unidade { font-size: 35px; }
+    .oferta-combo { font-size: 35px; padding: 8px 20px; }
+    .validade { font-size: 26px; }
+    .rodape { font-size: 20px; padding: 10px 15px; flex-direction: column; text-align: center; }
+    .rodape-text-item { margin: 4px 0; }
+    .logo-fonseca { font-size: 32px; }
+    .logo-supermercado { font-size: 18px; }
+}
+
+@media print {
+    body, html {
+        height: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: white !important;
+    }
+
+    #topMenuBar { display: none !important; } /* Oculta a nova barra de menu na impressão */
+
+    .editor-container {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        height: 100% !important;
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: white !important;
+    }
+
+    .editor-body {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .placa-a4 {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        margin: 0 auto !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        overflow: hidden !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        page-break-after: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    .controls, .layers-panel {
+        display: none !important;
+    }
+
+    .faixa-promocao, .produto, .preco, .unidade,
+    .oferta-combo, .validade, .logo-fonseca,
+    .logo-supermercado, .rodape,
+    .cabecalho, .conteudo, .rodape-container {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .preco-container {
+        page-break-inside: avoid !important;
+    }
+}
+
+@media print and (orientation: landscape) {
+    .placa-a4 {
+        width: 277mm !important;
+        height: 190mm !important;
+        display: grid !important;
+        grid-template-columns: 80px 1fr !important;
+        grid-template-rows: auto 1fr auto !important;
+        margin: 0 auto !important;
+    }
+
+    .cabecalho {
+        grid-column: 2 !important;
+        grid-row: 1 !important;
+    }
+
+    .conteudo {
+        grid-column: 2 !important;
+        grid-row: 2 !important;
+    }
+
+    .rodape-container {
+        grid-column: 2 !important;
+        grid-row: 3 !important;
+    }
+
+    .logo-rodape {
+        grid-column: 1 !important;
+        grid-row: 1 / span 3 !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        height: 100% !important;
+        padding: 0 10px !important;
+        background-color: #f8f8f8 !important;
+        border-right: 2px solid #ddd !important;
+    }
+
+    .logo-fonseca {
+        writing-mode: vertical-rl !important;
+        transform: rotate(180deg) !important;
+        font-size: 60px !important;
+        margin: 15px 0 !important;
+        color: #0066CC !important;
+    }
+
+    .logo-supermercado {
+        writing-mode: vertical-rl !important;
+        transform: rotate(180deg) !important;
+        font-size: 30px !important;
+        margin: 15px 0 !important;
+        color: #E31837 !important;
+    }
+
+    .faixa-promocao {
+        font-size: 52px !important;
+        padding: 25px 30px !important;
+    }
+
+    .produto {
+        font-size: 100px !important;
+    }
+
+    .preco {
+        font-size: 220px !important;
+    }
+
+    .unidade {
+        font-size: 60px !important;
+    }
+
+    .oferta-combo {
+        font-size: 55px !important;
+    }
+
+    .validade {
+        font-size: 40px !important;
+    }
+
+    .rodape {
+        font-size: 28px !important;
+    }
+}
+
+.form-group { margin-bottom: 20px; }
+label { display: block; margin-bottom: 8px; font-weight: bold; color: #333; font-size: 0.95em; }
+input, select { width: 100%; padding: 10px 12px; border: 1px solid #c0c0c0; border-radius: 6px; box-sizing: border-box; font-size: 1em; transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out; }
+input:focus, select:focus { border-color: var(--cor-azul-clara); outline: none; box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.2); }
+input[type="color"] { padding: 5px; height: 40px; }
+
+.color-options { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
+.color-option { width: 45px; height: 45px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; box-shadow: 0 3px 8px rgba(0,0,0,0.15); transition: transform 0.2s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out; }
+.color-option:hover { transform: scale(1.15); box-shadow: 0 5px 12px rgba(0,0,0,0.25); }
+.color-option.selected { border-color: var(--cor-preto); transform: scale(1.08); box-shadow: 0 2px 7px rgba(0,0,0,0.3); }
+
+button { background-color: var(--cor-primaria); color: var(--cor-branco); border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 15px; width: 100%; font-size: 1.05em; transition: var(--transition-ease); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+button:hover { background-color: #C1122F; transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0,0,0,0.3); }
+button:active { transform: translateY(0); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+
+/* --- NOVO: ESTILOS DOS BOTÕES NO MODAL DE SALVAR --- */
+.export-buttons-modal {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.export-buttons-modal button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 15px;
+    font-size: 1em;
+    gap: 10px;
+}
+
+.export-buttons-modal button#savePngButton {
+    background-color: #1976D2;
+}
+
+.export-buttons-modal button#savePngButton:hover {
+    background-color: #1565C0;
+}
+
+.export-buttons-modal button#savePdfButton {
+    background-color: #D32F2F;
+}
+
+.export-buttons-modal button#savePdfButton:hover {
+    background-color: #C62828;
+}
+
+
+/* Estilos para os modais (message-box, social-share-modal, configModal, e saveModal) */
+.message-box, .social-share-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px);
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.message-box.show, .social-share-modal.show {
+    display: flex;
+    opacity: 1;
+}
+.message-box-content, .social-share-content {
+    background-color: var(--cor-branco);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+    text-align: center;
+    max-width: 500px; /* Aumentado para acomodar mais conteúdo */
+    width: 90%;
+    animation: fadeInScale 0.3s ease-out;
+    position: relative;
+}
+
+/* INÍCIO: NOVOS ESTILOS PARA MODAL DE CONFIRMAÇÃO */
+.confirmation-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.confirmation-buttons button {
+    margin-top: 0;
+    width: auto;
+    min-width: 140px;
+    padding: 10px 25px;
+}
+
+#confirmYesButton {
+    background-color: var(--cor-primaria);
+}
+
+#confirmYesButton:hover {
+    background-color: #C1122F;
+}
+
+#confirmNoButton {
+    background-color: var(--cor-cinza);
+}
+
+#confirmNoButton:hover {
+    background-color: #666;
+}
+/* FIM: NOVOS ESTILOS PARA MODAL DE CONFIRMAÇÃO */
+
+/* --- NOVOS ESTILOS PARA O MODAL DE CONFIGURAÇÃO --- */
+#configModal .message-box-content {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    text-align: left;
+}
+
+.config-section {
+    border-top: 1px solid var(--cor-cinza-suave);
+    padding-top: 20px;
+    margin-top: 20px;
+}
+
+.config-section:first-child {
+    border-top: none;
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.config-section h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: var(--cor-primaria);
+}
+
+.logo-preview-container {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.logo-preview-container p {
+    font-size: 0.9em;
+    color: var(--cor-cinza);
+    margin-bottom: 5px;
+}
+
+#logoPreview {
+    max-width: 200px;
+    max-height: 100px;
+    border: 1px solid var(--cor-cinza-suave);
+    background-color: #f9f9f9;
+}
+
+.config-buttons-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.config-buttons-group button {
+    flex: 1;
+    margin-top: 0;
+}
+
+button.remove-btn {
+    background-color: var(--cor-cinza);
+}
+button.remove-btn:hover {
+    background-color: #555;
+}
+
+
+/* --- CÓDIGO CORRIGIDO --- */
+.social-share-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 2em;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+    transition: color 0.2s ease, transform 0.2s ease;
+    line-height: 1;
+    /* Novas propriedades para alinhamento preciso */
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    border-radius: 50%;
+}
+.social-share-close:hover {
+    color: #333;
+    transform: scale(1.1);
+}
+/* --- FIM DA CORREÇÃO --- */
+
+.social-share-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 20px; }
+.social-share-buttons a { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 85px; height: 85px; border-radius: 12px; text-decoration: none; font-size: 0.8em; font-weight: bold; transition: all 0.2s ease-in-out; box-shadow: 0 4px 10px rgba(0,0,0,0.15); color: var(--cor-branco); }
+.social-share-buttons a:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 7px 18px rgba(0,0,0,0.25); }
+.social-share-buttons a i { font-size: 2.8em; margin-bottom: 7px; }
+.social-share-buttons a.whatsapp { background-color: #25D366; }
+.social-share-buttons a.facebook { background-color: #1877F2; }
+.social-share-buttons a.twitter { background-color: #1DA1F2; }
+.social-share-buttons a.instagram { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); }
+.social-share-buttons a.download-img { background-color: var(--cor-azul-clara); }
+.social-share-buttons a.download-pdf { background-color: var(--cor-primaria); }
+
+.placa-a4 {
+    width: 210mm;
+    height: 297mm;
+    background: var(--cor-branco);
+    box-shadow: var(--shadow-strong);
+    position: relative;
+    overflow: hidden;
+    font-family: 'Bebas Neue', sans-serif;
+    display: flex;
+    flex-direction: column;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    border-radius: 15px;
+    justify-self: center; /* Centraliza a placa no grid */
+}
+
+.cabecalho { flex-shrink: 0; position: relative; }
+.faixa-promocao { background: linear-gradient(135deg, var(--cor-secundaria) 0%, #FFA500 100%); text-align: center; padding: 20px 25px; font-size: 48px; font-weight: 900; text-transform: uppercase; letter-spacing: 4px; box-shadow: var(--shadow-medium); margin: 0 25px; border-radius: 0 0 20px 20px; position: relative; overflow: hidden; border: 4px solid var(--cor-branco); transition: var(--transition-bounce); text-shadow: 2px 2px 4px rgba(0,0,0,0.3); box-sizing: border-box; line-height: 1.2; }
+.faixa-promocao.red-gradient { background: linear-gradient(135deg, #FF0000 0%, #CC0000 100%); }
+.faixa-promocao.blue-gradient { background: linear-gradient(135deg, #00BFFF 0%, #1E90FF 100%); }
+.faixa-promocao.green-gradient { background: linear-gradient(135deg, #32CD32 0%, #228B22 100%); }
+.faixa-promocao.purple-gradient { background: linear-gradient(135deg, #8A2BE2 0%, #4B0082 100%); }
+.faixa-promocao.orange-gradient { background: linear-gradient(135deg, #FF8C00 0%, #FF4500 100%); }
+.faixa-promocao.three-d { background: linear-gradient(135deg, #FF6F00 0%, #FF3D00 100%); text-shadow: 3px 3px 5px rgba(0,0,0,0.6); box-shadow: 0 10px 25px rgba(0,0,0,0.5), 0 0 0 7px rgba(255,255,255,0.4) inset, 0 0 0 15px rgba(0,0,0,0.2) inset; border: none; border-radius: 25px; transform: perspective(1200px) rotateX(7deg) translateY(-8px) scale(1.02); }
+.faixa-promocao.diamond { clip-path: polygon(0% 0%, 100% 0%, 97% 50%, 100% 100%, 0% 100%, 3% 50%); }
+.faixa-promocao.vintage { text-shadow: 3px 3px 0 var(--cor-preto), 5px 5px 0 rgba(0,0,0,0.3); font-family: 'Roboto', sans-serif; }
+.faixa-promocao.ribbon { clip-path: polygon(0% 0%, 100% 0%, 100% 75%, 50% 100%, 0% 75%); }
+.faixa-promocao.modern-cut { clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); }
+.faixa-promocao.soft-wave { border-radius: 0 0 50% 50% / 20px; }
+.faixa-promocao.liquidos { border-radius: 40px; }
+.faixa-promocao.double-wave { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 70%, 10% 60%, 20% 70%, 30% 60%, 40% 70%, 50% 60%, 60% 70%, 70% 60%, 80% 70%, 90% 60%, 100% 70%, 100% 100%, 0 100%); }
+.faixa-promocao.zigzag { clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), 90% 100%, 80% calc(100% - 20px), 70% 100%, 60% calc(100% - 20px), 50% 100%, 40% calc(100% - 20px), 30% 100%, 20% calc(100% - 20px), 10% 100%, 0 calc(100% - 20px)); }
+.faixa-promocao.star-cut { clip-path: polygon(0 0, 100% 0, 100% 70%, 50% 100%, 0 70%); }
+.faixa-promocao.banner { clip-path: polygon(0 0, 100% 0, 95% 50%, 100% 100%, 0 100%, 5% 50%); border-radius: 0; }
+.faixa-promocao.flag { clip-path: polygon(0 0, 100% 0, 100% 70%, 50% 100%, 0 70%); background: linear-gradient(135deg, #FF0000, #FF4500); }
+.faixa-promocao.splash { border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; background: linear-gradient(135deg, #00BFFF, #1E90FF); }
+.faixa-promocao.tech { background: linear-gradient(135deg, #00FFFF, #008B8B); clip-path: polygon(0 0, 100% 0, 100% 70%, 80% 100%, 20% 100%, 0 70%); font-family: 'Source Code Pro', monospace; }
+.faixa-promocao.grunge { background: linear-gradient(135deg, #8B4513, #A0522D); border: 3px dashed #000; font-family: 'Passion One', cursive; text-shadow: 3px 3px 0 #000; }
+.faixa-promocao.neon { background: linear-gradient(135deg, #FF00FF, #9400D3); box-shadow: 0 0 10px #FF00FF, 0 0 20px #FF00FF, 0 0 30px #FF00FF; text-shadow: 0 0 5px #FFF, 0 0 10px #FFF; }
+.faixa-promocao.metal { background: linear-gradient(135deg, #7d7d7d, #c4c4c4); text-shadow: 0 1px 0 #ccc, 0 2px 0 #c9c9c9, 0 3px 0 #bbb, 0 4px 0 #b9b9b9, 0 5px 0 #aaa, 0 6px 1px rgba(0,0,0,.1), 0 0 5px rgba(0,0,0,.1), 0 1px 3px rgba(0,0,0,.3), 0 3px 5px rgba(0,0,0,.2), 0 5px 10px rgba(0,0,0,.25), 0 10px 10px rgba(0,0,0,.2), 0 20px 20px rgba(0,0,0,.15); }
+.faixa-promocao.chalk { background: #333; color: #fff; font-family: 'Chalkduster', 'Marker Felt', 'Comic Sans MS', sans-serif; border: 3px dashed #fff; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+.faixa-promocao.comic { background: #fff; color: #000; font-family: 'Comic Sans MS', cursive; border: 3px solid #000; box-shadow: 5px 5px 0 #000; }
+.faixa-promocao.fire { background: linear-gradient(135deg, #ff0000, #ff5a00, #ff9a00); text-shadow: 0 0 10px #fff, 0 0 20px #ff0, 0 0 30px #ff8000, 0 0 40px #ff0000); }
+.faixa-promocao.water { background: linear-gradient(135deg, #00b4ff, #0080ff); text-shadow: 0 0 10px rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,180,255,0.5); }
+
+/* --- SEÇÃO DO CONTEÚDO ATUALIZADA --- */
+.conteudo {
+    position: relative; /* Essencial para ser o container de posicionamento */
+    flex-grow: 1;
+    padding: 20px 25px;
+    box-sizing: border-box;
+    min-height: 0;
+}
+
+/* Regras para .conteudo-superior e .preco-container foram removidas */
+
+.produto { font-size: 90px; text-shadow: 4px 4px 0 white, -2px -2px 0 white, 2px -2px 0 white, -2px 2px 0 white, 2px 2px 0 white, 6px 6px 0 rgba(0,0,0,0.2); margin: 0; text-transform: uppercase; letter-spacing: 4px; line-height: 1; word-break: break-word; text-align: center; padding: 0 10px; box-sizing: border-box; }
+.produto.product-color-red { color: var(--cor-primaria); }
+.produto.product-color-blue { color: var(--cor-azul-clara); }
+.produto.product-color-green { color: var(--cor-verde-clara); }
+.produto.product-color-black { color: var(--cor-preto); }
+.produto.product-color-yellow { color: var(--cor-secundaria); text-shadow: 4px 4px 0 var(--cor-preto), -2px -2px 0 var(--cor-preto), 2px -2px 0 var(--cor-preto), -2px 2px 0 var(--cor-preto), 2px 2px 0 var(--cor-preto), 6px 6px 0 rgba(0,0,0,0.5); }
+
+/* Adiciona cursor de ponteiro para elementos clicáveis na placa */
+.interactive-placa-element {
+    cursor: pointer !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    border: 2px dashed transparent; /* Borda para seleção */
+}
+
+.interactive-placa-element.selected-layer {
+    border-color: var(--cor-azul-clara);
+    box-shadow: 0 0 0 3px var(--cor-azul-clara);
+}
+
+.draggable {
+    position: absolute;
+    cursor: move;
+    width: auto;
+    transition: opacity 0.2s ease, box-shadow 0.2s ease;
+}
+
+.draggable.dragging {
+    opacity: 0.8;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    z-index: 999 !important; /* Garante que o elemento arrastado esteja sempre no topo */
+}
+
+/* --- NOVAS POSIÇÕES INICIAIS --- */
+#produtoDisplay {
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+}
+
+#precoAntigoDisplay {
+    top: 200px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#porCifraoGroup {
+    display: flex; flex-direction: column; align-items: center; font-weight: 900; line-height: 1; justify-content: flex-end; padding-bottom: 0.2em;
+    top: 400px;
+    left: 80px;
+}
+
+#mainPriceGroup {
+    top: 270px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#unidadeGroup {
+    top: 390px;
+    left: 650px;
+}
+
+/* POSIÇÕES OTIMIZADAS PARA OFERTA COMBO E VALIDADE */
+#ofertaComboDisplay {
+    top: 750px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#validadeDisplay {
+    top: 820px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.preco-antigo { font-size: 45px; color: var(--cor-cinza); text-decoration: line-through; text-align: center; font-weight: 700; text-shadow: 1px 1px 0 rgba(255,255,255,0.7); margin-bottom: 0; }
+
+.por-text { font-size: 30px; font-family: 'Open Sans', sans-serif; color: var(--cor-preto); font-weight: 700; }
+.cifrao { color: var(--cor-preto); line-height: 1; }
+.preco-principal { line-height: 0.8; }
+.preco { text-align: center; margin: 0; font-weight: 900; display: flex; align-items: flex-start;
+        font-size: 470px; }
+.preco .fracao, .preco .centavos-separator { font-size: 0.5em; font-weight: 700; margin-left: 2px; position: relative; top: -0.1em; }
+.unidade-container { align-self: center; padding-left: 5px; }
+
+/* ############# INÍCIO DA CORREÇÃO DE ESTILO DA UNIDADE ############# */
+/* Estilo base comum para ambos os formatos */
+.unidade { 
+    font-size: 55px;
+    color: var(--cor-branco);
+    font-weight: 900;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 1;
+    height: 90px; /* Altura fixa para consistência vertical */
+}
+
+/* Estilo para o formato Retângulo (original) */
+.unidade.unidade-retangulo {
+    padding: 10px 22px;
+    border-radius: 15px;
+    border: 2px solid rgba(0,0,0,0.1);
+}
+
+/* Estilo para o formato Círculo (agora adaptativo) */
+.unidade.unidade-circulo {
+    min-width: 90px; /* Garante que seja um círculo com texto curto */
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 45px; /* Metade da altura para criar a forma de "pílula" */
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 5px 12px rgba(0,0,0,0.2), inset 0 2px 3px rgba(255,255,255,0.2);
+}
+
+/* Cores para o Retângulo */
+.unidade-retangulo.red { background-color: var(--cor-primaria); }
+.unidade-retangulo.green { background-color: var(--cor-verde-clara); }
+.unidade-retangulo.yellow { background-color: var(--cor-secundaria); color: #333; }
+.unidade-retangulo.blue { background-color: var(--cor-azul-clara); }
+.unidade-retangulo.purple { background-color: #800080; }
+.unidade-retangulo.orangered { background-color: #FF4500; }
+
+/* Cores com gradiente para o Círculo */
+.unidade-circulo.red { background: linear-gradient(145deg, #e52d47, #b81229); }
+.unidade-circulo.green { background: linear-gradient(145deg, #38a169, #247548); }
+.unidade-circulo.yellow { background: linear-gradient(145deg, #ffd700, #e6b800); color: #333; }
+.unidade-circulo.blue { background: linear-gradient(145deg, #0077e6, #0056b3); }
+.unidade-circulo.purple { background: linear-gradient(145deg, #9f7aea, #6b46c1); }
+.unidade-circulo.orangered { background: linear-gradient(145deg, #ff6347, #e6391a); }
+/* ############# FIM DA CORREÇÃO DE ESTILO DA UNIDADE ############# */
+
+
+.price-underline { width: 100%; height: 8px; background-color: var(--cor-cinza-suave); margin-top: 15px; border-radius: 4px; display: block; }
+
+.preco.price-3d { text-shadow: -5px -5px 0px rgba(0,0,0,0.7), 5px -5px 0px rgba(0,0,0,0.7), -5px 5px 0px rgba(0,0,0,0.7), 5px 5px 0px rgba(0,0,0,0.7), 10px 10px 0px rgba(0,0,0,0.4), 15px 15px 0px rgba(0,0,0,0.2); transform: perspective(700px) rotateX(8deg) rotateY(-8deg) scale(1.05); }
+.preco.price-outlined { -webkit-text-stroke: 4px var(--cor-preto); text-shadow: 6px 6px 0 var(--cor-primaria); }
+.preco.price-soft-shadow { text-shadow: 0 10px 20px rgba(0,0,0,0.4); }
+.preco.price-gradient {
+    background: linear-gradient(135deg, var(--cor-secundaria), var(--cor-primaria));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+.preco.price-stroke {
+    -webkit-text-stroke: 3px var(--cor-preto);
+    color: var(--cor-branco);
+    text-shadow: 5px 5px 0 var(--cor-preto);
+}
+.preco.price-metal {
+    color: #c4c4c4;
+    text-shadow: 0 1px 0 #ccc, 0 2px 0 #c9c9c9, 0 3px 0 #bbb, 0 4px 0 #b9b9b9, 0 5px 0 #aaa, 0 6px 1px rgba(0,0,0,.1), 0 0 5px rgba(0,0,0,.1), 0 1px 3px rgba(0,0,0,.3), 0 3px 5px rgba(0,0,0,.2), 0 5px 10px rgba(0,0,0,.25), 0 10px 10px rgba(0,0,0,.2), 0 20px 20px rgba(0,0,0,.15);
+}
+.preco.price-comic {
+    font-family: 'Comic Sans MS', cursive;
+    -webkit-text-stroke: 2px var(--cor-preto);
+    color: var(--cor-branco);
+    text-shadow: 5px 5px 0 var(--cor-preto);
+}
+.preco.yellow { color: var(--cor-secundaria); }
+.preco.green { color: var(--cor-verde-clara); }
+.preco.red { color: var(--cor-primaria); }
+.preco.blue { color: var(--cor-azul-clara); }
+.preco.black { color: var(--cor-preto); text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.4); }
+.preco.darkblue { color: #00008B; }
+.preco.magenta { color: #FF00FF; }
+.preco.cyan { color: #00FFFF; }
+.preco.lime { color: #00FF00; }
+.preco.orange { color: #FFA500; }
+.preco.pink { color: #FFC0CB; }
+
+.oferta-combo, .validade { max-width: 100%; text-align: center; line-height: 1.3; word-break: break-word; border-radius: 35px; padding: 12px 20px; font-weight: 900; letter-spacing: 1px; box-sizing: border-box; }
+
+.oferta-combo {
+    font-size: 50px;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.15);
+    border: 4px solid;
+    background-color: var(--cor-branco);
+}
+
+.validade {
+    font-size: 36px;
+    color: var(--cor-preto);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    background: transparent;
+    padding: 5px;
+}
+
+.rodape-container { display: flex; flex-direction: column; align-items: center; width: 100%; margin-top: auto; flex-shrink: 0; position: relative; }
+.logo-rodape { display: flex; flex-direction: column; align-items: center; margin-bottom: 10px; padding: 5px; }
+.logo-fonseca { font-size: 40px; font-weight: 900; letter-spacing: 3px; color: var(--cor-azul-clara); margin: 0; line-height: 1; text-shadow: 2px 2px 0 var(--cor-branco), -2px -2px 0 var(--cor-branco), 2px -2px 0 var(--cor-branco), -2px 2px 0 var(--cor-branco), 2px 2px 0 var(--cor-branco); }
+.logo-supermercado { font-size: 24px; margin: 0; color: var(--cor-primaria); font-weight: bold; letter-spacing: 1px; text-shadow: 1px 1px 1px rgba(0,0,0,0.2); }
+.rodape { color: var(--cor-branco); padding: 15px 25px; text-align: center; font-size: 24px; text-transform: uppercase; letter-spacing: 1.5px; width: 100%; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; box-sizing: border-box; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); gap: 20px; }
+.rodape.green-footer { background-color: var(--cor-verde-clara); }
+.rodape.blue-footer { background-color: var(--cor-azul-clara); }
+.rodape.red-footer { background-color: var(--cor-primaria); }
+.rodape.black-footer { background-color: var(--cor-preto); }
+.rodape-text-item { margin: 5px 10px; white-space: normal; text-align: center; }
+
+/* --- NOVOS ESTILOS PARA IMAGENS (PRODUTO E LOGO) --- */
+.image-container { /* Classe genérica para ambos os tipos de imagem */
+    position: absolute;
+    cursor: move;
+    border: 2px dashed transparent;
+    transition: border-color 0.3s;
+}
+
+.image-container.selected-layer {
+    border-color: var(--cor-azul-clara);
+    box-shadow: 0 0 0 3px var(--cor-azul-clara);
+}
+
+.image-container:hover {
+    border-color: var(--cor-azul-clara);
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+.image-container .resize-handle {
+    position: absolute;
+    bottom: -7px;
+    right: -7px;
+    width: 18px;
+    height: 18px;
+    background-color: var(--cor-azul-clara);
+    border: 2px solid white;
+    border-radius: 50%;
+    cursor: se-resize;
+    box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    z-index: 51;
+}
+
+#companyLogoContainer {
+    top: 30px;
+    left: 30px;
+    width: 150px;
+}
+
+/* --- INÍCIO: NOVOS ESTILOS PARA MÚLTIPLAS IMAGENS --- */
+.product-image-container { /* Classe específica para imagens de produto */
+    top: 250px;
+    left: 100px;
+    width: 250px;
+}
+
+.remove-image-btn {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 28px;
+    height: 28px;
+    background-color: var(--cor-primaria);
+    color: var(--cor-branco);
+    border: 2px solid var(--cor-branco);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    z-index: 52;
+    opacity: 0; /* Começa invisível */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform: scale(0.8);
+}
+
+.image-container:hover .remove-image-btn {
+    opacity: 1; /* Aparece ao passar o mouse */
+    transform: scale(1);
+}
+
+.remove-image-btn:hover {
+    background-color: #C1122F;
+    transform: scale(1.1);
+}
+/* --- FIM: NOVOS ESTILOS PARA MÚLTIPLAS IMAGENS --- */
+
+
+/* --- INÍCIO: NOVOS ESTILOS PARA TEXTO LIVRE --- */
+.texto-livre-item {
+    position: absolute;
+    cursor: move;
+    padding: 5px;
+    font-family: 'Roboto', sans-serif; /* Uma fonte padrão mais legível */
+    font-weight: normal; /* Alterado para normal como padrão */
+    line-height: 1.1;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    word-break: break-word; /* Garante que o texto não saia da caixa */
+    width: auto; /* A largura se ajustará ao conteúdo */
+    min-width: 50px; /* Largura mínima para facilitar a seleção */
+    text-align: center; /* Alinhamento padrão */
+}
+
+
+.texto-livre-item.selected, .texto-livre-item.selected-layer {
+    border: 2px dashed var(--cor-azul-clara);
+}
+/* --- FIM: NOVOS ESTILOS PARA TEXTO LIVRE --- */
+
+
+input[type="file"] {
+    padding: 10px;
+    background-color: var(--cor-cinza-suave);
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Open Sans', Arial, sans-serif;
+    color: #333;
+}
+
+input[type="file"]::-webkit-file-upload-button {
+    background: var(--cor-primaria);
+    color: var(--cor-branco);
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color 0.2s;
+    font-weight: bold;
+}
+
+input[type="file"]::-webkit-file-upload-button:hover {
+    background: #C1122F;
+}
+
+#undoButton, #redoButton {
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+#undoButton:disabled, #redoButton:disabled {
+    background-color: #f0f0f0;
+    color: #b0b0b0;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* NOVO: Estilos para os controles de slider */
+.slider-group {
+    margin-top: 15px;
+}
+.slider-group label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+.slider-group span {
+    font-weight: normal;
+    color: var(--cor-primaria);
+}
+.slider-control {
+    width: 100%;
+}
+.slider-group.horizontal {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.slider-group.horizontal .slider-control {
+    flex-grow: 1;
+}
+.slider-group.horizontal .slider-value-input {
+    width: 70px;
+    text-align: center;
+}
+
+/* --- NOVO: Grupo de Checkbox --- */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+}
+
+.checkbox-group label {
+    margin: 0;
+    font-weight: normal;
+}
+
+/* --- NOVO: Grupo de Inputs de Preço --- */
+.price-input-group {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+.price-input-item {
+    flex: 1;
+}
+
+.price-input-item label {
+    font-size: 0.9em;
+    font-weight: normal;
+}
+
+/* --- NOVOS ESTILOS PARA OS CONTROLES DE FORMATAÇÃO DE TEXTO --- */
+.format-button-group {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    flex-wrap: wrap; /* Permite que os botões quebrem a linha se não couberem */
+}
+
+.format-button-group button {
+    flex: 1;
+    min-width: 40px; /* Largura mínima para cada botão */
+    padding: 8px;
+    margin: 0;
+    font-size: 1em;
+    background-color: var(--cor-cinza-suave);
+    color: #333;
+    border: 1px solid #ccc;
+    box-shadow: none;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.format-button-group button:hover {
+    background-color: #dcdcdc;
+    transform: none; /* Remove o efeito de subida */
+    box-shadow: none;
+}
+
+.format-button-group button.active {
+    background-color: var(--cor-azul-clara);
+    color: var(--cor-branco);
+    border-color: #0056b3;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.format-button-group button.symbol-btn {
+    font-size: 1.5em;
+    padding: 5px;
+}

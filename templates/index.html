@@ -1,0 +1,491 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plate editor pro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;700;900&family=Roboto:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Open+Sans:wght@700;800&family=Lato:wght@700;900&family=Oswald:wght@700&family=Fjalla+One&family=Passion+One:wght@700&family=Exo+2:wght@700&family=Source+Code+Pro:wght@700&family=Anton&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div id="welcomeContainer" class="login-container">
+        <div class="login-box">
+            <h2>Bem-vindo ao Editor de placas promocionais.</h2>
+            <p>Comece a criar suas placas promocionais.</p>
+            <button id="acessarEditorButton">Iniciar Editor</button>
+            <button id="openConfigModalButton" class="config-button">Configurar Informações</button>
+            <p class="footer-text">Versão 1.0.0 | 2025 @ Railan Tavares</p>
+        </div>
+    </div>
+
+    <div id="editorContainer" class="editor-container" style="display: none;">
+        
+<nav id="topMenuBar">
+    <div class="top-menu-group">
+        <button id="undoButton" class="top-menu-button" title="Desfazer (Ctrl+Z)"><i class="fas fa-undo"></i></button>
+        <button id="redoButton" class="top-menu-button" title="Refazer (Ctrl+Y)"><i class="fas fa-redo"></i></button>
+        <button id="saveProjectButton" class="top-menu-button" title="Salvar projeto em um arquivo .json"><i class="fas fa-file-download"></i> Salvar Projeto</button>
+        <label for="importProjectInput" id="importProjectButton" class="top-menu-button" title="Importar projeto de um arquivo .json"><i class="fas fa-file-upload"></i> Importar Projeto</label>
+        <input type="file" id="importProjectInput" accept=".json" style="display: none;">
+        <button id="topMenuSalvar" class="top-menu-button"><i class="fas fa-save"></i> Salvar</button>
+        <button id="topMenuCompartilhar" class="top-menu-button"><i class="fas fa-share-alt"></i> Compartilhar</button>
+    </div>
+    <div class="top-menu-group">
+        <button class="panel-toggle-button" data-panel="panelPrincipal"><i class="fas fa-box-open"></i> Produto & Preço</button>
+        <button class="panel-toggle-button" data-panel="panelFaixa"><i class="fas fa-tag"></i> Faixa</button>
+        <button class="panel-toggle-button" data-panel="panelAdicionais"><i class="fas fa-info-circle"></i> Detalhes</button>
+        <button class="panel-toggle-button" data-panel="panelImagem"><i class="fas fa-image"></i> Imagem</button>
+        <button class="panel-toggle-button" data-panel="panelTextoLivre"><i class="fas fa-font"></i> Texto Livre</button>
+        <button class="panel-toggle-button" data-panel="panelSimbolos"><i class="fas fa-icons"></i> Símbolos</button>
+        <button class="panel-toggle-button" data-panel="panelRodape"><i class="fas fa-shoe-prints"></i> Rodapé</button>
+    </div>
+    <div class="top-menu-group">
+         <button id="logoutButton">Página inicial</button>
+    </div>
+</nav>
+        <div class="editor-body">
+            <aside class="controls">
+
+                <div class="control-panel-static">
+                    <h3 class="panel-title"><i class="fas fa-magic icon-left"></i> Modelos Rápidos</h3>
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="toggleTemplateSelector">
+                            <label for="toggleTemplateSelector">Ativar Modelos</label>
+                        </div>
+                    </div>
+                    <div class="form-group" id="templateSelectorContainer" style="display: none;">
+                        <label for="templateSelector">Escolha um modelo para começar:</label>
+                        <select id="templateSelector">
+                            <option value="">-- Selecione um Modelo --</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="control-panel-static">
+                    <h3 class="panel-title"><i class="fas fa-list-alt icon-left"></i> Lista de Placas</h3>
+                    <div class="form-group">
+                        <div class="lista-placas-container">
+                            <select id="listaPlacas" size="5" class="lista-placas-select"></select>
+                            <div class="lista-placas-buttons">
+                                <button id="adicionarLista" class="lista-btn" title="Adicionar placa atual à lista"><i class="fas fa-plus"></i></button>
+                                <button id="alterarLista" class="lista-btn" title="Salvar alterações na placa selecionada"><i class="fas fa-edit"></i></button>
+                                <button id="removerLista" class="lista-btn" title="Remover placa selecionada"><i class="fas fa-minus"></i></button>
+                                <button id="limparLista" class="lista-btn" title="Limpar toda a lista"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                        <div class="export-lote-buttons">
+                            <button id="exportarPdfLote" class="lote-btn"><i class="fas fa-file-pdf"></i> Gerar PDF em Lote</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-panel" id="panelFaixa" style="display: none;">
+                    <h3 class="panel-title"><i class="fas fa-tag icon-left"></i> Faixa Promocional</h3>
+                    <div class="form-group">
+                        <label for="promocaoText">Texto da Faixa:</label>
+                        <input type="text" id="promocaoText" value="OFERTA IMPERDÍVEL!">
+                        <label for="promocaoTextColor">Cor do Texto da Faixa:</label>
+                        <input type="color" id="promocaoTextColor" value="#E31837">
+                        <label for="promocaoStyle">Estilo da Faixa:</label>
+                        <select id="promocaoStyle">
+                            <option value="default">Padrão</option>
+                            <option value="red-gradient">Vermelho Gradiente</option>
+                            <option value="blue-gradient">Azul Gradiente</option>
+                            <option value="green-gradient">Verde Gradiente</option>
+                            <option value="purple-gradient">Roxo Gradiente</option>
+                            <option value="orange-gradient">Laranja Gradiente</option>
+                            <option value="three-d">3D Impactante</option>
+                            <option value="diamond">Diamante</option>
+                            <option value="vintage">Vintage</option>
+                            <option value="ribbon">Fita</option>
+                            <option value="liquidos">Líquidos</option>
+                            <option value="modern-cut">Corte Moderno</option>
+                            <option value="soft-wave">Onda Suave</option>
+                            <option value="double-wave">Onda Dupla</option>
+                            <option value="zigzag">Zigzag</option>
+                            <option value="star-cut">Corte Estrela</option>
+                            <option value="banner">Banner</option>
+                            <option value="flag">Bandeira</option>
+                            <option value="splash">Splash</option>
+                            <option value="tech">Tech</option>
+                            <option value="grunge">Grunge</option>
+                            <option value="metal">Metal</option>
+                            <option value="chalk">Giz</option>
+                            <option value="comic">Quadrinhos</option>
+                            <option value="fire">Fogo</option>
+                            <option value="water">Água</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="control-panel" id="panelPrincipal">
+                    <h3 class="panel-title"><i class="fas fa-box-open icon-left"></i> Produto</h3>
+                    <div class="form-group">
+                        <label for="produtoName">Nome do Produto:</label>
+                        <input type="text" id="produtoName" value="DESCRIÇÃO DO PRODUTO">
+                        <label>Cor do Texto do Produto:</label>
+                        <div class="color-options" id="productColorOptions">
+                            <div class="color-option selected" style="background-color: #8B0000;" data-color-class="product-color-red"></div>
+                            <div class="color-option" style="background-color: #0066CC;" data-color-class="product-color-blue"></div>
+                            <div class="color-option" style="background-color: #2E8B57;" data-color-class="product-color-green"></div>
+                            <div class="color-option" style="background-color: #000;" data-color-class="product-color-black"></div>
+                            <div class="color-option" style="background-color: #FFD700;" data-color-class="product-color-yellow"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="produtoFontFamily">Fonte e Estilo:</label>
+                        <select id="produtoFontFamily">
+                            <option value="'Bebas Neue', sans-serif">Bebas Neue</option>
+                            <option value="'Roboto', sans-serif">Roboto</option>
+                            <option value="'Montserrat', sans-serif">Montserrat</option>
+                            <option value="'Open Sans', sans-serif">Open Sans</option>
+                            <option value="'Lato', sans-serif">Lato</option>
+                            <option value="'Oswald', sans-serif">Oswald</option>
+                            <option value="'Anton', sans-serif">Anton</option>
+                        </select>
+                        <div class="format-button-group" style="margin-top: 10px;">
+                            <button id="produtoBold" title="Negrito"><i class="fas fa-bold"></i></button>
+                            <button id="produtoItalic" title="Itálico"><i class="fas fa-italic"></i></button>
+                            <button id="produtoUnderline" title="Sublinhado"><i class="fas fa-underline"></i></button>
+                        </div>
+                    </div>
+                    <h3 class="panel-title"><i class="fas fa-dollar-sign icon-left"></i> Preço</h3>
+                    <div class="form-group">
+                        <label for="precoAntigo">Preço Antigo (Opcional):</label>
+                        <input type="number" id="precoAntigo" placeholder="Ex: 99.99" step="0.01">
+                        <div class="slider-group">
+                            <label for="precoAntigoSizeSlider">Tamanho: <span id="precoAntigoSizeValue">45px</span></label>
+                            <input type="range" id="precoAntigoSizeSlider" min="20" max="100" value="45" class="slider-control" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="price-input-group">
+                            <div class="price-input-item">
+                                <label for="precoAtualReal">Reais</label>
+                                <input type="number" id="precoAtualReal" value="00" step="1">
+                            </div>
+                            <div class="price-input-item">
+                                <label for="precoAtualCentavos">Centavos</label>
+                                <input type="number" id="precoAtualCentavos" value="00" min="0" max="99" step="1">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="cifraoSize">Tamanho do Cifrão (px):</label>
+                        <input type="number" id="cifraoSize" value="80" step="1">
+                         <label for="precoPrincipalSize">Tamanho do Preço (px):</label>
+                        <div class="slider-group horizontal">
+                            <input type="range" id="precoPrincipalSizeSlider" min="80" max="800" value="470" class="slider-control">
+                            <input type="number" id="precoPrincipalSize" value="470" step="1" max="800" class="slider-value-input">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="precoStyle">Estilo do Preço:</label>
+                        <select id="precoStyle">
+                            <option value="manual">Padrão</option>
+                            <option value="price-3d">3D Impactante</option>
+                            <option value="price-outlined">Contornado</option>
+                            <option value="price-soft-shadow">Sombreado Suave</option>
+                            <option value="price-gradient">Gradiente</option>
+                            <option value="price-stroke">Borda Espessa</option>
+                            <option value="price-metal">Metal</option>
+                            <option value="price-comic">Quadrinhos</option>
+                        </select>
+                        <label>Cor do Preço:</label>
+                        <div class="color-options" id="priceColorOptions">
+                            <div class="color-option selected" style="background-color: #FFD700;" data-color-class="yellow"></div>
+                            <div class="color-option" style="background-color: #2E8B57;" data-color-class="green"></div>
+                            <div class="color-option" style="background-color: #E31837;" data-color-class="red"></div>
+                            <div class="color-option" style="background-color: #0066CC;" data-color-class="blue"></div>
+                            <div class="color-option" style="background-color: #000000;" data-color-class="black"></div>
+                            <div class="color-option" style="background-color: #00008B;" data-color-class="darkblue"></div>
+                            <div class="color-option" style="background-color: #FF00FF;" data-color-class="magenta"></div>
+                            <div class="color-option" style="background-color: #00FFFF;" data-color-class="cyan"></div>
+                            <div class="color-option" style="background-color: #00FF00;" data-color-class="lime"></div>
+                            <div class="color-option" style="background-color: #FFA500;" data-color-class="orange"></div>
+                            <div class="color-option" style="background-color: #FFC0CB;" data-color-class="pink"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-panel" id="panelAdicionais" style="display: none;">
+                    <h3 class="panel-title"><i class="fas fa-info-circle icon-left"></i> Detalhes Adicionais</h3>
+                    <div class="form-group">
+                        <label for="unidadeText">Unidade:</label>
+                        <input type="text" id="unidadeText" value="KG">
+                        <label for="unidadeColor">Cor da Unidade:</label>
+                        <select id="unidadeColor">
+                            <option value="red">Vermelho</option>
+                            <option value="green">Verde</option>
+                            <option value="yellow">Amarelo</option>
+                            <option value="blue" selected>Azul</option>
+                            <option value="purple">Roxo</option>
+                            <option value="orangered">Laranja Avermelhado</option>
+                        </select>
+                        <label for="unidadeStyle">Estilo da Unidade:</label>
+                        <select id="unidadeStyle">
+                            <option value="unidade-circulo">Círculo</option>
+                            <option value="unidade-retangulo">Retângulo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="ofertaComboText">Texto de Oferta Combo (Opcional):</label>
+                        <input type="text" id="ofertaComboText" placeholder="Ex: LEVE 2 PAGUE 1" value="">
+                        <label for="ofertaComboTextColor">Cor do Texto do Combo:</label>
+                        <input type="color" id="ofertaComboTextColor" value="#E31837">
+                        <label for="ofertaComboBorderColor">Cor do Contorno do Combo:</label>
+                        <input type="color" id="ofertaComboBorderColor" value="#FFBF00">
+                    </div>
+                    <div class="form-group">
+                        <label for="validadeText">Validade (Opcional):</label>
+                        <input type="text" id="validadeText" placeholder="Ex: Oferta válida até 31/12" value="">
+                    </div>
+                </div>
+                
+                <div class="control-panel" id="panelImagem" style="display: none;">
+                    <h3 class="panel-title"><i class="fas fa-image icon-left"></i> Imagens do Produto</h3>
+                    <div class="form-group">
+                        <label for="imageUpload">Adicionar Imagem (foto do produto):</label>
+                        <input type="file" id="imageUpload" accept="image/*" multiple>
+                    </div>
+                </div>
+
+                <div class="control-panel" id="panelTextoLivre" style="display: none;">
+                    <h3 class="panel-title"><i class="fas fa-font icon-left"></i> Texto Livre</h3>
+                    <div class="form-group">
+                        <button id="addFreeTextButton"><i class="fas fa-plus-circle"></i> Adicionar Novo Texto</button>
+                    </div>
+                    <div id="freeTextControls" class="form-group" style="display: none;">
+                        <hr>
+                        <h4 class="panel-subtitle">Editar Texto Selecionado</h4>
+                        <label for="freeTextContent">Conteúdo do Texto:</label>
+                        <input type="text" id="freeTextContent">
+                        
+                        <label for="freeTextColor">Cor do Texto:</label>
+                        <input type="color" id="freeTextColor" value="#000000">
+                        
+                        <div class="slider-group">
+                            <label for="freeTextSizeSlider">Tamanho da Fonte: <span id="freeTextSizeValue">50px</span></label>
+                            <input type="range" id="freeTextSizeSlider" min="10" max="250" value="50" class="slider-control">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="freeTextFontFamily">Fonte:</label>
+                            <select id="freeTextFontFamily">
+                                <option value="'Bebas Neue', sans-serif">Bebas Neue</option>
+                                <option value="'Roboto', sans-serif">Roboto</option>
+                                <option value="'Montserrat', sans-serif">Montserrat</option>
+                                <option value="'Open Sans', sans-serif">Open Sans</option>
+                                <option value="'Lato', sans-serif">Lato</option>
+                                <option value="'Oswald', sans-serif">Oswald</option>
+                                <option value="'Anton', sans-serif">Anton</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Estilo e Alinhamento:</label>
+                            <div class="format-button-group">
+                                <button id="freeTextBold" title="Negrito"><i class="fas fa-bold"></i></button>
+                                <button id="freeTextItalic" title="Itálico"><i class="fas fa-italic"></i></button>
+                                <button id="freeTextUnderline" title="Sublinhado"><i class="fas fa-underline"></i></button>
+                                <button id="freeTextAlignLeft" title="Alinhar à Esquerda"><i class="fas fa-align-left"></i></button>
+                                <button id="freeTextAlignCenter" title="Centralizar"><i class="fas fa-align-center"></i></button>
+                                <button id="freeTextAlignRight" title="Alinhar à Direita"><i class="fas fa-align-right"></i></button>
+                            </div>
+                        </div>
+                        <button id="removeFreeTextButton" class="remove-btn" style="margin-top: 20px;"><i class="fas fa-trash-alt"></i> Remover Texto Selecionado</button>
+                    </div>
+                </div>
+
+                <div class="control-panel" id="panelSimbolos" style="display: none;">
+                    <h3 class="panel-title"><i class="fas fa-icons icon-left"></i> Inserir Símbolos</h3>
+                    <div class="form-group">
+                        <label>Clique em um símbolo para adicioná-lo à placa:</label>
+                        <div class="format-button-group" id="symbol-button-group">
+                            <button class="symbol-btn" data-symbol="●" title="Círculo Cheio">●</button>
+                            <button class="symbol-btn" data-symbol="■" title="Quadrado Cheio">■</button>
+                            <button class="symbol-btn" data-symbol="★" title="Estrela">★</button>
+                            <button class="symbol-btn" data-symbol="♦" title="Losango">♦</button>
+                            <button class="symbol-btn" data-symbol="♥" title="Coração">♥</button>
+                            <button class="symbol-btn" data-symbol="►" title="Seta para Direita">►</button>
+                            <button class="symbol-btn" data-symbol="✔" title="Visto">✔</button>
+                            <button class="symbol-btn" data-symbol="✖" title="Xis">✖</button>
+                            <button class="symbol-btn" data-symbol="—" title="Traço Longo">—</button>
+                            <button class="symbol-btn" data-symbol="|" title="Barra Vertical">|</button>
+                        </div>
+                    </div>
+                    <div id="symbolControls" class="form-group" style="display: none;">
+                        <hr>
+                        <h4 class="panel-subtitle">Editar Símbolo Selecionado</h4>
+                        <label for="symbolColor">Cor do Símbolo:</label>
+                        <input type="color" id="symbolColor" value="#000000">
+                        <div class="slider-group">
+                            <label for="symbolSizeSlider">Tamanho do Símbolo: <span id="symbolSizeValue">100px</span></label>
+                            <input type="range" id="symbolSizeSlider" min="10" max="400" value="100" class="slider-control">
+                        </div>
+                        <button id="removeSymbolButton" class="remove-btn" style="margin-top: 20px;"><i class="fas fa-trash-alt"></i> Remover Símbolo Selecionado</button>
+                    </div>
+                </div>
+
+                <div class="control-panel" id="panelRodape" style="display: none;">
+                    <h3 class="panel-title"><i class="fas fa-shoe-prints icon-left"></i> Rodapé</h3>
+                    <div class="form-group">
+                        <label for="rodapeColor">Cor do Rodapé:</label>
+                        <select id="rodapeColor">
+                            <option value="green-footer">Verde</option>
+                            <option value="blue-footer" selected>Azul</option>
+                            <option value="red-footer">Vermelho</option>
+                            <option value="black-footer">Preto</option>
+                        </select>
+                    </div>
+                </div>
+
+            </aside>
+
+            <section class="placa-a4" id="placaA4">
+                <header class="cabecalho interactive-placa-element" id="cabecalhoElement" data-name="Cabeçalho">
+                    <div class="faixa-promocao" id="faixaPromocao" data-target-panel="panelFaixa" data-name="Faixa Promocional">OFERTA IMPERDÍVEL!</div>
+                </header>
+
+                <div class="conteudo">
+                    <h1 class="produto draggable interactive-placa-element" id="produtoDisplay" data-target-panel="panelPrincipal" data-name="Nome do Produto">PRODUTO XXXX</h1>
+                
+                    <p class="preco-antigo draggable interactive-placa-element" id="precoAntigoDisplay" style="display: none;" data-target-panel="panelPrincipal" data-name="Preço Antigo">DE R$ 0,00</p>
+                
+                    <div id="porCifraoGroup" class="preco-info-esquerda draggable interactive-placa-element" data-target-panel="panelPrincipal" data-name="Cifrão 'Por'">
+                        <span class="por-text">POR</span>
+                        <span class="cifrao" id="cifraoDisplay">R$</span>
+                    </div>
+                
+                    <div id="mainPriceGroup" class="draggable interactive-placa-element" data-target-panel="panelPrincipal" data-name="Preço Principal">
+                        <div class="preco-principal">
+                            <p class="preco" id="precoAtualDisplay">59<span class="centavos-separator">,</span><span class="fracao">90</span></p>
+                        </div>
+                        <div class="price-underline"></div> 
+                    </div>
+                    
+                    <div id="unidadeGroup" class="unidade-container draggable interactive-placa-element" data-target-panel="panelAdicionais" data-name="Unidade">
+                        <p class="unidade" id="unidadeDisplay">KG</p>
+                    </div>
+
+                    <p class="oferta-combo draggable interactive-placa-element" id="ofertaComboDisplay" style="display: none;" data-target-panel="panelAdicionais" data-name="Oferta Combo"></p>
+                    <p class="validade draggable interactive-placa-element" id="validadeDisplay" style="display: none;" data-target-panel="panelAdicionais" data-name="Validade da Oferta"></p>
+                    </div>
+
+                <footer class="rodape-container interactive-placa-element" id="rodapeElement" data-target-panel="panelRodape" data-name="Rodapé">
+                    <div class="logo-rodape">
+                        <h2 class="logo-fonseca"></h2>
+                        <h3 class="logo-supermercado"></h3>
+                    </div>
+                    <div class="rodape blue-footer" id="rodape">
+                        <span class="rodape-text-item" id="enderecoDisplay"><i class="fas fa-map-marker-alt"></i> Rua Desembargador Amaral, 2037 - Centro</span>
+                        <span class="rodape-text-item" id="instagramDisplay"><i class="fab fa-instagram"></i> @fonsecasupermercado.corrente</span>
+                        <span class="rodape-text-item" id="telefoneDisplay"><i class="fas fa-phone-alt"></i> (89) 98803-0512</span>
+                    </div>
+                </footer>
+            </section>
+            
+            <aside class="layers-panel" id="layersPanel">
+                <h3 class="panel-title"><i class="fas fa-layer-group icon-left"></i> Camadas</h3>
+                <ul id="layerList" class="layer-list">
+                    </ul>
+            </aside>
+            </div>
+    </div>
+
+    <div id="configModal" class="message-box">
+        <div class="message-box-content">
+            <button class="social-share-close" id="configModalClose">&times;</button>
+            <h3>Configurações Gerais</h3>
+            
+            <div class="config-section">
+                <h4>Informações de Contato</h4>
+                <div class="form-group">
+                    <label for="modalTelefoneText">Telefone/WhatsApp:</label>
+                    <input type="text" id="modalTelefoneText">
+                </div>
+                <div class="form-group">
+                    <label for="modalEnderecoText">Endereço:</label>
+                    <input type="text" id="modalEnderecoText">
+                </div>
+                <div class="form-group">
+                    <label for="modalInstagramText">Instagram:</label>
+                    <input type="text" id="modalInstagramText">
+                </div>
+                <button id="saveContactInfoButton">Salvar Contatos</button>
+            </div>
+
+            <div class="config-section">
+                <h4>Logo da Empresa</h4>
+                <div class="form-group">
+                    <label for="logoUpload">Selecione o arquivo da logo:</label>
+                    <input type="file" id="logoUpload" accept="image/*">
+                    <div class="logo-preview-container">
+                        <p>Pré-visualização:</p>
+                        <img id="logoPreview" src="#" alt="Preview da Logo" style="display:none;">
+                    </div>
+                </div>
+                <div class="config-buttons-group">
+                    <button id="saveLogoButton">Salvar Logo</button>
+                    <button id="removeLogoButton" class="remove-btn">Remover Logo</button>
+                </div>
+            </div>
+
+            <p id="configMessage" class="error-message"></p>
+        </div>
+    </div>
+
+    <div id="messageBox" class="message-box">
+        <div class="message-box-content">
+            <h3 id="messageBoxTitle"></h3>
+            <p id="messageBoxMessage"></p>
+            <button id="messageBoxClose">OK</button>
+        </div>
+    </div>
+
+    <div id="saveModal" class="message-box">
+        <div class="message-box-content">
+            <button class="social-share-close" id="saveModalClose">&times;</button>
+            <h3>Salvar Placa</h3>
+            <p>Escolha o formato no qual deseja salvar a sua placa.</p>
+            <div class="export-buttons-modal">
+                <button id="savePngButton"><i class="fas fa-image"></i> Salvar como PNG</button>
+                <button id="savePdfButton"><i class="fas fa-file-pdf"></i> Salvar como PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="socialShareModal" class="social-share-modal">
+        <div class="social-share-content">
+            <button class="social-share-close" id="socialShareClose">&times;</button>
+            <h3>Compartilhar Placa Promocional</h3>
+            <p>Compartilhe sua placa de oferta nas redes sociais:</p>
+            <div class="social-share-buttons">
+                <a href="#" target="_blank" class="whatsapp" id="shareWhatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                <a href="#" target="_blank" class="facebook" id="shareFacebook"><i class="fab fa-facebook-f"></i> Facebook</a>
+                <a href="#" target="_blank" class="twitter" id="shareTwitter"><i class="fab fa-twitter"></i> Twitter</a>
+                <a href="#" target="_blank" class="instagram" id="shareInstagram"><i class="fab fa-instagram"></i> Instagram (Story)</a>
+                </div>
+        </div>
+    </div>
+
+    <div id="confirmationModal" class="message-box">
+        <div class="message-box-content">
+            <h3 id="confirmationModalTitle"></h3>
+            <p id="confirmationModalMessage"></p>
+            <div class="confirmation-buttons">
+                <button id="confirmYesButton"></button>
+                <button id="confirmNoButton"></button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</body>
+</html>
