@@ -17,7 +17,7 @@
             <p>Comece a criar suas placas promocionais.</p>
             <button id="acessarEditorButton">Iniciar Editor</button>
             <button id="openConfigModalButton" class="config-button">Configurar Informações</button>
-            <p class="footer-text">Versão 1.0.0 | 2025 @ Railan Tavares</p>
+            <p class="footer-text">Versão 1.0.1 | 2025 @ Railan Tavares</p>
         </div>
     </div>
 
@@ -486,9 +486,26 @@
         </div>
     </div>
 
+    <div id="previewChoiceModal" class="message-box">
+        <div class="message-box-content">
+            <button class="social-share-close" id="previewChoiceModalClose">&times;</button>
+            <h3>Pré-Visualizar</h3>
+            <p>O que você deseja visualizar?</p>
+            <div class="confirmation-buttons">
+                <button id="previewCurrentButton">Edição Atual</button>
+                <button id="previewListButton">Produtos da Lista</button>
+            </div>
+        </div>
+    </div>
+
     <div id="previewOverlay" class="preview-overlay">
         <button id="closePreview" class="preview-close-button">&times;</button>
         <div id="previewContent"></div>
+        <div class="preview-navigation" id="previewNavigationControls" style="display: none;">
+            <button id="previewPrevButton" class="preview-nav-button"><i class="fas fa-chevron-left"></i></button>
+            <span id="previewCounter" class="preview-counter"></span>
+            <button id="previewNextButton" class="preview-nav-button"><i class="fas fa-chevron-right"></i></button>
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>

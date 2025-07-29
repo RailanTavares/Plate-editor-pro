@@ -728,19 +728,19 @@ button:active { transform: translateY(0); box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     padding: 10px 25px;
 }
 
-#confirmYesButton {
+#confirmYesButton, #previewCurrentButton {
     background-color: var(--cor-primaria);
 }
 
-#confirmYesButton:hover {
+#confirmYesButton:hover, #previewCurrentButton:hover {
     background-color: #C1122F;
 }
 
-#confirmNoButton {
+#confirmNoButton, #previewListButton {
     background-color: var(--cor-cinza);
 }
 
-#confirmNoButton:hover {
+#confirmNoButton:hover, #previewListButton:hover {
     background-color: #666;
 }
 /* FIM: NOVOS ESTILOS PARA MODAL DE CONFIRMAÇÃO */
@@ -1382,6 +1382,7 @@ input[type="file"]::-webkit-file-upload-button:hover {
 
 #previewContent {
     transform-origin: center center;
+    position: relative; /* Adicionado para posicionar a navegação */
 }
 
 /* Ajusta a placa clonada para a visualização */
@@ -1417,3 +1418,57 @@ input[type="file"]::-webkit-file-upload-button:hover {
     transform: rotate(90deg) scale(1.1);
 }
 /* --- FIM: NOVOS ESTILOS PARA A PRÉ-VISUALIZAÇÃO --- */
+
+/* --- INÍCIO: NOVOS ESTILOS PARA NAVEGAÇÃO DA PRÉ-VISUALIZAÇÃO DA LISTA --- */
+.preview-navigation {
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+    box-sizing: border-box;
+    z-index: 2002; /* Acima do conteúdo da pré-visualização */
+    pointer-events: none; /* Permite cliques através da área de navegação */
+}
+
+.preview-nav-button {
+    background-color: rgba(0, 0, 0, 0.4);
+    color: var(--cor-branco);
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 1.8em;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease;
+    pointer-events: all; /* Habilita cliques nos botões */
+    box-shadow: var(--shadow-medium);
+}
+
+.preview-nav-button:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.preview-counter {
+    position: absolute;
+    bottom: -60px; /* Posicionado abaixo da placa */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.6);
+    color: var(--cor-branco);
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 1.1em;
+    font-weight: bold;
+    font-family: 'Roboto', sans-serif;
+    z-index: 2002;
+    box-shadow: var(--shadow-base);
+}
+/* --- FIM: NOVOS ESTILOS PARA NAVEGAÇÃO DA PRÉ-VISUALIZAÇÃO DA LISTA --- */

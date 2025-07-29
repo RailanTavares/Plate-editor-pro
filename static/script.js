@@ -293,6 +293,14 @@ const previewButton = document.getElementById('previewButton');
 const previewOverlay = document.getElementById('previewOverlay');
 const previewContent = document.getElementById('previewContent');
 const closePreview = document.getElementById('closePreview');
+const previewChoiceModal = document.getElementById('previewChoiceModal');
+const previewChoiceModalClose = document.getElementById('previewChoiceModalClose');
+const previewCurrentButton = document.getElementById('previewCurrentButton');
+const previewListButton = document.getElementById('previewListButton');
+const previewNavigationControls = document.getElementById('previewNavigationControls');
+const previewPrevButton = document.getElementById('previewPrevButton');
+const previewNextButton = document.getElementById('previewNextButton');
+const previewCounter = document.getElementById('previewCounter');
 
 
 // --- LÓGICA DE CALLBACK PARA MODAL DE CONFIRMAÇÃO ---
@@ -899,13 +907,32 @@ function hideConfigModal() {
     configModal.classList.remove('show');
 }
 
-// --- NOVO: Funções para a Pré-visualização ---
-function showPreview() {
+// --- Funções para a Pré-visualização (ATUALIZADAS) ---
+
+let previewListStates = [];
+let currentPreviewIndex = 0;
+let editorStateBeforePreview = null;
+
+// 1. Mostra o modal de escolha
+function showPreviewChoiceModal() {
+    previewChoiceModal.classList.add('show');
+}
+
+function hidePreviewChoiceModal() {
+    previewChoiceModal.classList.remove('show');
+}
+
+// 2. Mostra a pré-visualização da edição ATUAL
+function showCurrentEditPreview() {
+    hidePreviewChoiceModal();
     // Deseleciona qualquer camada para remover as bordas
     deselectAllLayers();
     
     // Limpa o conteúdo anterior
     previewContent.innerHTML = '';
+
+    // Esconde os controles de navegação
+    previewNavigationControls.style.display = 'none';
 
     // Clona a placa
     const placaClone = placaA4.cloneNode(true);
@@ -920,7 +947,6 @@ function showPreview() {
     previewContent.appendChild(placaClone);
     
     // Ajusta o tamanho do clone para caber na tela
-    // Adiciona um pequeno atraso para garantir que o DOM foi atualizado
     setTimeout(() => {
         const viewportW = window.innerWidth * 0.9;
         const viewportH = window.innerHeight * 0.9;
@@ -928,13 +954,87 @@ function showPreview() {
         placaClone.style.transform = `scale(${scale})`;
     }, 10);
 
-    // Mostra o overlay
+    // Mostra o overlay principal
     previewOverlay.classList.add('show');
 }
 
+// 3. Inicia a pré-visualização da LISTA
+function startListPreview() {
+    hidePreviewChoiceModal();
+
+    if (listaPlacas.options.length === 0) {
+        showMessageBox('Lista Vazia', 'Não há produtos na lista para visualizar.');
+        return;
+    }
+
+    // Salva o estado atual do editor para restaurar depois
+    editorStateBeforePreview = saveState();
+
+    // Coleta todos os estados da lista de placas
+    previewListStates = Array.from(listaPlacas.options).map(option => JSON.parse(option.dataset.placaData));
+    
+    currentPreviewIndex = 0;
+    
+    // Mostra os controles de navegação
+    previewNavigationControls.style.display = 'flex';
+    
+    // Exibe o primeiro item da lista
+    displayListPreviewAtIndex(currentPreviewIndex);
+
+    // Mostra o overlay principal
+    previewOverlay.classList.add('show');
+}
+
+// 4. Exibe uma placa específica da lista na pré-visualização
+async function displayListPreviewAtIndex(index) {
+    if (index < 0 || index >= previewListStates.length) {
+        return; // Índice fora dos limites
+    }
+
+    // Deseleciona qualquer camada no editor principal para evitar bordas
+    deselectAllLayers();
+
+    const stateToDisplay = previewListStates[index];
+    
+    // Restaura o estado da placa da lista no editor principal (temporariamente)
+    restoreState(stateToDisplay);
+    
+    // Aguarda um momento para que o DOM seja completamente atualizado com o novo estado
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    previewContent.innerHTML = '';
+    const placaClone = placaA4.cloneNode(true);
+
+    // Limpa o clone de elementos de UI
+    placaClone.querySelectorAll('.interactive-placa-element').forEach(el => {
+        el.classList.remove('interactive-placa-element', 'selected-layer');
+    });
+    placaClone.querySelectorAll('.resize-handle, .remove-image-btn').forEach(el => el.remove());
+
+    previewContent.appendChild(placaClone);
+
+    // Redimensiona o clone para caber na tela
+    setTimeout(() => {
+        const viewportW = window.innerWidth * 0.9;
+        const viewportH = window.innerHeight * 0.9;
+        const scale = Math.min(viewportW / placaClone.offsetWidth, viewportH / placaClone.offsetHeight);
+        placaClone.style.transform = `scale(${scale})`;
+    }, 10);
+
+    // Atualiza o contador
+    previewCounter.textContent = `${index + 1} / ${previewListStates.length}`;
+}
+
+// 5. Função para fechar a pré-visualização e restaurar o estado
 function hidePreview() {
     previewOverlay.classList.remove('show');
     previewContent.innerHTML = ''; // Limpa para liberar memória
+
+    // Se estávamos vendo a lista, restaura o estado original do editor
+    if (editorStateBeforePreview) {
+        restoreState(editorStateBeforePreview);
+        editorStateBeforePreview = null; // Limpa o estado salvo
+    }
 }
 
 
@@ -1993,9 +2093,23 @@ document.addEventListener('DOMContentLoaded', () => {
         hideSaveModal();
     });
     
-    // NOVO: Listeners para a pré-visualização
-    previewButton.addEventListener('click', showPreview);
+    // --- ATUALIZAÇÃO: Listeners para a pré-visualização ---
+    previewButton.addEventListener('click', showPreviewChoiceModal);
+    previewChoiceModalClose.addEventListener('click', hidePreviewChoiceModal);
+    previewCurrentButton.addEventListener('click', showCurrentEditPreview);
+    previewListButton.addEventListener('click', startListPreview);
+    
     closePreview.addEventListener('click', hidePreview);
+
+    previewNextButton.addEventListener('click', () => {
+        currentPreviewIndex = (currentPreviewIndex + 1) % previewListStates.length;
+        displayListPreviewAtIndex(currentPreviewIndex);
+    });
+
+    previewPrevButton.addEventListener('click', () => {
+        currentPreviewIndex = (currentPreviewIndex - 1 + previewListStates.length) % previewListStates.length;
+        displayListPreviewAtIndex(currentPreviewIndex);
+    });
 
 
     confirmYesButton.addEventListener('click', () => {
