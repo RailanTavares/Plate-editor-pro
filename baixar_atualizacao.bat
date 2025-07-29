@@ -15,10 +15,7 @@ SET "APP_DIR=C:\Plate editor pro"
 
 REM Nome esperado do arquivo .zip na sua release do GitHub.
 REM MUITO IMPORTANTE: Mantenha este nome consistente ao criar suas releases!
-SET "RELEASE_ASSET_EXPECTED_NAME=plate-editor-pro-release.zip"
-
-REM Nome da pasta do ambiente virtual
-SET "VENV_DIR=venv"
+SET "RELEASE_ASSET_EXPECTED_NAME=Plate-editor-pro.zip"
 
 REM ========================================================
 REM             INICIANDO PROCESSO DE ATUALIZACAO
@@ -32,19 +29,54 @@ ECHO.
 ECHO Verificando a ultima release no GitHub para %GITHUB_USER%/%GITHUB_REPO%...
 ECHO.
 
-REM Tenta obter os detalhes da ultima release usando curl e Powershell para parsear o JSON
+REM Obter detalhes da ultima release e salvar em um arquivo temporario
+SET "TEMP_JSON_FILE=%TEMP%\github_release_data.json"
+curl -s "https://api.github.com/repos/%GITHUB_USER%/%GITHUB_REPO%/releases/latest" > "%TEMP_JSON_FILE%"
+
+REM Verificar se o arquivo JSON temporario foi criado e tem conteudo
+IF NOT EXIST "%TEMP_JSON_FILE%" (
+    ECHO ERRO: Falha ao obter os dados da release do GitHub.
+    ECHO Verifique sua conexao com a internet ou se o repositorio/release existem.
+    PAUSE
+    GOTO :EOF
+)
+
+FOR /F %%Z IN ("%TEMP_JSON_FILE%") DO (
+    IF %%~zZ EQU 0 (
+        ECHO ERRO: O arquivo de dados da release esta vazio.
+        ECHO Isso pode indicar que nao ha releases publicadas ou um problema na API do GitHub.
+        PAUSE
+        GOTO :EOF
+    )
+)
+
+REM Extrair a URL de download do arquivo JSON temporario usando PowerShell
 SET "DOWNLOAD_URL="
+REM *** DEBUG TEMPORARIO: Exibir o JSON baixado e o nome do asset esperado ***
+ECHO.
+ECHO =========================================================
+ECHO   DEBUG: Conteudo do arquivo JSON baixado do GitHub
+ECHO =========================================================
+TYPE "%TEMP_JSON_FILE%"
+ECHO.
+ECHO Nome do asset que o script esta procurando: "%RELEASE_ASSET_EXPECTED_NAME%"
+ECHO =========================================================
+ECHO.
+PAUSE
+REM *** FIM DO DEBUG TEMPORARIO ***
+
 FOR /F "usebackq tokens=*" %%L IN (`
-    curl -s "https://api.github.com/repos/%GITHUB_USER%/%GITHUB_REPO%/releases/latest" ^
-    ^| powershell -Command "$json = ConvertFrom-Json -InputObject $input; $json.assets | Where-Object { $_.name -eq '%RELEASE_ASSET_EXPECTED_NAME%' } | Select-Object -ExpandProperty browser_download_url"
+    powershell -Command "$json = ConvertFrom-Json (Get-Content -Raw '%TEMP_JSON_FILE%'); $asset = $json.assets | Where-Object { $_.name -eq '%RELEASE_ASSET_EXPECTED_NAME%' }; if ($asset) { $asset.browser_download_url }"
 `) DO (
     SET "DOWNLOAD_URL=%%L"
 )
 
+REM Limpar arquivo JSON temporario
+IF EXIST "%TEMP_JSON_FILE%" DEL "%TEMP_JSON_FILE%"
+
 IF "%DOWNLOAD_URL%"=="" (
-    ECHO ERRO: Nao foi possivel encontrar a URL de download para %RELEASE_ASSET_EXPECTED_NAME%.
-    ECHO Certifique-se de que a release mais recente no GitHub contem este arquivo.
-    ECHO Pode ser necessaria autenticacao (token) se o repositorio for privado.
+    ECHO ERRO: Nao foi possivel encontrar a URL de download para '%RELEASE_ASSET_EXPECTED_NAME%'.
+    ECHO Verifique se o arquivo .zip com este nome foi anexado a sua ultima release publicada.
     PAUSE
     GOTO :EOF
 )
@@ -60,13 +92,13 @@ IF NOT EXIST new_version.zip (
     GOTO :EOF
 )
 
-ECHO Arquivo baixado. Descompactando para "%APP_DIR%"...
+ECHO Arquivo baixado. Descompactando para "%APP_DIR%\"...
 REM Descompacta o arquivo ZIP sobrescrevendo os arquivos existentes
 powershell -Command "Expand-Archive -Path 'new_version.zip' -DestinationPath '%APP_DIR%' -Force"
 
 IF %ERRORLEVEL% NEQ 0 (
     ECHO ERRO: Falha ao descompactar a nova versao.
-    ECHO Verifique se a pasta de destino esta correta e se voce tem permissoes.
+    ECHO Verifique se a pasta de destino esta correta e se voce tem permissoes de escrita.
     PAUSE
     GOTO :EOF
 )
@@ -75,68 +107,67 @@ ECHO Limpando arquivos temporarios...
 IF EXIST new_version.zip DEL new_version.zip
 
 ECHO.
-ECHO Instalando/atualizando dependencias Python (requirements.txt) no ambiente virtual...
+ECHO ========================================================
+ECHO   CONFIGURANDO AMBIENTE VIRTUAL E DEPENDENCIAS PYTHON
+ECHO ========================================================
+ECHO.
+
+REM Navega para o diretorio do aplicativo
 pushd "%APP_DIR%"
 
-REM Verifica se o ambiente virtual existe, se nao, cria
-IF NOT EXIST "%VENV_DIR%\Scripts\activate" (
-    ECHO Ambiente virtual nao encontrado. Criando um novo...
-    python -m venv "%VENV_DIR%"
+REM Verifica se o venv ja existe, se nao, cria
+IF NOT EXIST "venv\Scripts\activate.bat" (
+    ECHO Criando ambiente virtual (venv)...
+    python -m venv venv
     IF %ERRORLEVEL% NEQ 0 (
-        ECHO ERRO: Falha ao criar o ambiente virtual. Verifique a instalacao do Python.
+        ECHO ERRO: Nao foi possivel criar o ambiente virtual.
+        ECHO Verifique se o Python esta instalado e no PATH.
         PAUSE
         popd
         GOTO :EOF
     )
-    ECHO Ambiente virtual criado.
+) ELSE (
+    ECHO Ambiente virtual (venv) ja existe.
 )
 
-REM Ativa o ambiente virtual e instala as dependencias
-call "%VENV_DIR%\Scripts\activate"
-IF %ERRORLEVEL% NEQ 0 (
-    ECHO ERRO: Falha ao ativar o ambiente virtual.
-    PAUSE
-    popd
-    GOTO :EOF
-)
+REM Ativa o ambiente virtual
+CALL "venv\Scripts\activate.bat"
 
+REM Instala/atualiza dependencias
+ECHO Instalando/atualizando dependencias Python (requirements.txt)...
 pip install -r requirements.txt
+
 IF %ERRORLEVEL% NEQ 0 (
-    ECHO AVISO: Erro ao instalar dependencias Python. Isso pode causar problemas no app.
-    ECHO Por favor, verifique o arquivo requirements.txt e as mensagens de erro acima.
+    ECHO AVISO: Erro ao instalar dependencias Python. Isso pode causar problemas no aplicativo.
+    ECHO Verifique seu arquivo requirements.txt ou a conexao com a internet.
     PAUSE
+) ELSE (
+    ECHO Dependencias Python instaladas/atualizadas com sucesso.
 )
 
+REM Desativa o ambiente virtual (opcional, pois o script vai reiniciar o servidor)
+CALL deactivate
+
+REM Retorna ao diretorio original
 popd
 
-ECHO.
-ECHO ===============================================
-ECHO   PARANDO INSTANCIAS ANTERIORES DO SERVIDOR...
-ECHO ===============================================
-REM Tenta encontrar e finalizar processos Python (python.exe e pythonw.exe)
-REM que estao rodando com o titulo especifico (do nosso servidor).
-REM O "nul 2>&1" esconde mensagens de sucesso/erro para uma saida mais limpa.
-REM NOTA: O script 'iniciar servidor.bat' usa 'pythonw.exe'.
-taskkill /F /IM python.exe /FI "WINDOWTITLE eq GeradorDePlacas_Server_BACKGROUND" > nul 2>&1
-taskkill /F /IM pythonw.exe /FI "WINDOWTITLE eq GeradorDePlacas_Server_BACKGROUND" > nul 2>&1
-REM Adicione uma pequena pausa para dar tempo ao sistema de finalizar os processos
-timeout /t 2 /nobreak > nul
 
 ECHO.
-ECHO ===============================================
-ECHO   INICIANDO O SERVIDOR COM A NOVA VERSAO...
-ECHO ===============================================
-REM Inicia o servidor Flask usando o script dedicado.
-REM O script 'iniciar servidor.bat' ja contem a logica para usar pythonw.exe e manter em segundo plano.
-REM Certifique-se de que 'iniciar servidor.bat' esteja na pasta do seu projeto (%APP_DIR%).
-start "" "%APP_DIR%\iniciar servidor.bat"
+ECHO ========================================================
+ECHO   REINICIANDO SERVIDOR FLASK
+ECHO ========================================================
+ECHO.
+
+REM Chama o script de inicio/parada do servidor
+REM O caminho deve ser ajustado se "iniciar servidor.bat" nao estiver na raiz de APP_DIR
+CALL "%APP_DIR%\iniciar servidor.bat"
 
 ECHO.
 ECHO ===============================================
 ECHO   ATUALIZACAO CONCLUIDA!
 ECHO ===============================================
-ECHO O aplicativo deve estar rodando a nova versao.
-ECHO Verifique o endereco: http://127.0.0.1:5000
+ECHO.
+ECHO Por favor, verifique o aplicativo no navegador: http://127.0.0.1:5000
 ECHO.
 PAUSE
-ENDLOCAL
+GOTO :EOF
