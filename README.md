@@ -6,6 +6,11 @@
  
 É uma aplicação web local desenvolvida em Flask (Python), HTML, CSS e JavaScript, projetada para facilitar a criação rápida e personalizável de placas de ofertas para supermercados. Ele permite aos usuários gerenciar informações de produtos, preços e detalhes de contato, além de exportar as placas em formatos PNG e PDF. Esta solução foi criada para otimizar o processo de comunicação visual e a agilidade na atualização de promoções.
 
+---
+## Modelos
+<p align="center">
+  <img src="placa_1.png" width="250"/> <img src="placa_2.png" width="250"/>
+</p>
 
 # 🚀 Instalação e Execução
 Siga os passos abaixo para instalar e rodar a aplicação no seu computador.
